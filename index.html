@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-view="digital" data-wall="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Samay</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A0E14">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+<link rel="shortcut icon" href="icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Samay">
+
+<style>
+  :root{
+    --bg:#0A0E14; --panel:#10151D; --line:#232B37;
+    --text:#E6EDF3; --muted:#7B8794; --accent:#4FD1C5;
+    --warn:#F5A623; --bad:#E5555A; --focus:#4FD1C5;
+    --radius:10px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  html[data-theme="light"]{
+    --bg:#F3F5F8; --panel:#FFFFFF; --line:#DCE1E7;
+    --text:#16202B; --muted:#5B6773; --accent:#0E8C82;
+    --warn:#B36B00; --bad:#C4353B; --focus:#0E8C82;
+  }
+  html[data-theme="oled"]{
+    --bg:#000000; --panel:#060606; --line:#1B1B1B;
+    --text:#E9F1F0; --muted:#7C8A88; --accent:#3CE7D3;
+    --warn:#F5A623; --bad:#FF5C61; --focus:#3CE7D3;
+  }
+  html[data-theme="hc"]{
+    --bg:#000000; --panel:#000000; --line:#FFFFFF;
+    --text:#FFFFFF; --muted:#FFFFFF; --accent:#FFE100;
+    --warn:#FFE100; --bad:#FF4136; --focus:#FFE100;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    min-height:100dvh; display:flex; flex-direction:column; align-items:center;
+    text-align:center; padding:20px 16px 12px;
+  }
+
+  .topbar{ width:100%; max-width:480px; display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .pill-toggle{ display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; gap:2px; background:var(--panel); }
+  .pill-toggle button{ border:0; background:transparent; color:var(--muted); font-family:var(--sans); font-size:12px; padding:6px 12px; border-radius:999px; cursor:pointer; }
+  html[data-theme="hc"] .pill-toggle button{ color:var(--text); }
+  .pill-toggle button[aria-pressed="true"]{ background:var(--accent); color:var(--bg); font-weight:600; }
+  .pill-toggle button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  html[data-theme="hc"] .pill-toggle{ border-width:2px; }
+
+  .banner{ width:100%; max-width:480px; font-size:12.5px; font-weight:600; border-radius:8px; padding:8px 12px; margin-bottom:14px; display:none; }
+  .banner.show{ display:block; }
+  .banner.offline{ background:var(--bad); color:#fff; }
+  .banner.drift{ background:var(--warn); color:var(--bg); }
+
+  main{ width:100%; max-width:480px; flex:1; }
+  .eyebrow{ font-size:13px; color:var(--muted); letter-spacing:.02em; margin:0 0 4px; }
+  h1{ font-size:22px; margin:0 0 20px; font-weight:600; }
+
+  .clock{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:clamp(40px,12vw,58px); line-height:1; margin:0 0 6px; }
+  .clock .ms{ font-size:.42em; color:var(--muted); }
+  .datestr{ color:var(--muted); font-size:14px; margin:0 0 12px; }
+
+  .analog-wrap{ display:flex; justify-content:center; margin:0 0 10px; }
+  .analog{ width:min(58vw,220px); height:auto; }
+  .analog .face{ fill:var(--panel); stroke:var(--line); stroke-width:2; }
+  .analog .tick{ stroke:var(--muted); stroke-width:2; }
+  .analog .hand{ stroke-linecap:round; }
+  .analog .hour{ stroke:var(--text); stroke-width:5; }
+  .analog .minute{ stroke:var(--text); stroke-width:3.5; }
+  .analog .second{ stroke:var(--accent); stroke-width:1.6; }
+  .analog .hub{ fill:var(--accent); }
+  html[data-view="digital"] .analog-wrap{ display:none; }
+  html[data-view="analog"] .clock{ display:none; }
+
+  .toolrow{ display:flex; justify-content:center; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+  .toolrow button{ font-family:var(--sans); font-size:12.5px; font-weight:600; color:var(--text); background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:7px 14px; cursor:pointer; }
+  .toolrow button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .accuracy{ font-size:13px; margin:0 0 8px; display:flex; align-items:center; justify-content:center; gap:7px; }
+  .device-offset{ font-size:12.5px; color:var(--muted); margin:0 0 22px; min-height:16px; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--muted); flex:none; }
+  .dot.ok{ background:var(--accent); animation:pulse 2s infinite; }
+  .dot.warn{ background:var(--warn); }
+  .dot.bad{ background:var(--bad); }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+    70%{ box-shadow:0 0 0 8px transparent; }
+    100%{ box-shadow:0 0 0 0 transparent; }
+  }
+
+  .sources{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+  .source{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; display:flex; align-items:center; gap:10px; text-align:left; }
+  .source .name{ font-weight:600; font-size:13.5px; flex:none; min-width:66px; max-width:88px; }
+  .source .detail{ flex:1; min-width:0; }
+  .source .detail .status{ font-size:12px; color:var(--muted); }
+  .source .spark{ flex:none; width:70px; height:24px; }
+  .source .spark polyline{ fill:none; stroke:var(--accent); stroke-width:1.6; }
+  .source .spark.bad-line polyline{ stroke:var(--bad); }
+  .source .offset{ font-family:var(--mono); font-size:12.5px; flex:none; text-align:right; min-width:58px; }
+  html[data-theme="hc"] .source{ border-width:2px; }
+
+  button.resync{ font-family:var(--sans); font-size:14px; font-weight:600; color:var(--bg); background:var(--accent); border:0; border-radius:999px; padding:11px 26px; cursor:pointer; margin-bottom:8px; }
+  button.resync:disabled{ opacity:.55; cursor:default; }
+  button.resync:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .note{ font-size:12px; color:var(--muted); max-width:340px; margin:14px auto 0; }
+
+  footer{ width:100%; max-width:480px; margin-top:28px; padding-top:14px; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:center; min-height:40px; font-size:12px; color:var(--muted); }
+
+  .exit-wall{ display:none; position:fixed; top:14px; right:14px; z-index:10; font-family:var(--sans); font-size:12px; font-weight:600; color:var(--text); background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:7px 14px; cursor:pointer; }
+  html[data-wall="on"] .exit-wall{ display:block; }
+  html[data-wall="on"] .topbar, html[data-wall="on"] .banner, html[data-wall="on"] .eyebrow,
+  html[data-wall="on"] .toolrow, html[data-wall="on"] .accuracy, html[data-wall="on"] .device-offset,
+  html[data-wall="on"] .sources, html[data-wall="on"] .resync, html[data-wall="on"] .note,
+  html[data-wall="on"] footer{ display:none; }
+  html[data-wall="on"] body{ justify-content:center; }
+  html[data-wall="on"] .clock{ font-size:clamp(56px,18vw,120px); }
+  html[data-wall="on"] .analog{ width:min(80vw,420px); }
+</style>
+</head>
+<body>
+
+  <button type="button" class="exit-wall" id="exitWallBtn">Exit wall clock ✕</button>
+
+  <div class="topbar">
+    <div class="pill-toggle" role="group" aria-label="Theme">
+      <button type="button" data-theme-btn="dark" aria-pressed="true">Dark</button>
+      <button type="button" data-theme-btn="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-btn="oled" aria-pressed="false">OLED</button>
+      <button type="button" data-theme-btn="hc" aria-pressed="false">HC</button>
+    </div>
+    <div class="pill-toggle" role="group" aria-label="Timezone">
+      <button type="button" data-tz-btn="utc" aria-pressed="true">UTC</button>
+      <button type="button" data-tz-btn="local" aria-pressed="false">Local</button>
+    </div>
+    <div class="pill-toggle" role="group" aria-label="Clock style">
+      <button type="button" data-view-btn="digital" aria-pressed="true">Digital</button>
+      <button type="button" data-view-btn="analog" aria-pressed="false">Analog</button>
+    </div>
+  </div>
+
+  <div class="banner offline" id="offlineBanner">You're offline — waiting for a connection to resync…</div>
+  <div class="banner drift" id="driftBanner"></div>
+
+  <main>
+    <p class="eyebrow">Samay</p>
+    <h1 id="clockTitle">Synchronized UTC</h1>
+
+    <div class="clock" id="clock">--:--:--<span class="ms">.---</span></div>
+    <div class="analog-wrap">
+      <svg class="analog" viewBox="0 0 200 200">
+        <circle class="face" cx="100" cy="100" r="94"/>
+        <g class="ticks"></g>
+        <line id="hourHand" class="hand hour" x1="100" y1="100" x2="100" y2="58"/>
+        <line id="minuteHand" class="hand minute" x1="100" y1="100" x2="100" y2="34"/>
+        <line id="secondHand" class="hand second" x1="100" y1="112" x2="100" y2="26"/>
+        <circle class="hub" cx="100" cy="100" r="4.5"/>
+      </svg>
+    </div>
+    <p class="datestr" id="dateStr">Synchronizing…</p>
+
+    <div class="toolrow">
+      <button type="button" id="copyBtn">Copy timestamp</button>
+      <button type="button" id="wallBtn">Wall clock</button>
+      <button type="button" id="exportBtn">Export log</button>
+    </div>
+
+    <p class="accuracy"><span class="dot" id="masterDot"></span><span id="masterStatus">Contacting time servers…</span></p>
+    <p class="device-offset" id="deviceOffset"></p>
+
+    <div class="sources" id="sources"></div>
+
+    <button class="resync" id="resyncBtn" type="button">Re-sync now</button>
+    <p class="note">Browsers can only speak HTTPS, not raw NTP/UDP, so each source below is queried over HTTPS and corrected for round-trip delay to approximate true atomic time. Auto re-syncs every 90s while this tab is visible.</p>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> Manik Roy. All Rights Reserved.</span>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============ Constants ============ */
+  var HISTORY_LEN   = 10;
+  var FRESH_MS      = 5 * 60 * 1000;
+  var AUTO_SYNC_MS  = 90 * 1000;
+  var DRIFT_MS      = 1000;
+  var THEME_BG      = { dark:"#0A0E14", light:"#F3F5F8", oled:"#000000", hc:"#000000" };
+
+  var SOURCES = [
+    {
+      id: "cloudflare", label: "Cloudflare",
+      fetcher: function(){
+        return fetch("https://cloudflare.com/cdn-cgi/trace", { cache:"no-store" })
+          .then(function(r){ return r.text(); })
+          .then(function(txt){
+            var m = txt.match(/ts=([0-9.]+)/);
+            if(!m) throw new Error("no ts field");
+            return parseFloat(m[1]) * 1000;
+          });
+      }
+    },
+    {
+      id: "ntppool", label: "NTP Pool",
+      fetcher: function(){
+        return fetch("https://worldtimeapi.org/api/timezone/Etc/UTC", { cache:"no-store" })
+          .then(function(r){ return r.json(); })
+          .then(function(j){ return j.unixtime * 1000; })
+          .catch(function(){
+            return fetch("https://timeapi.io/api/Time/current/zone?timeZone=Etc/UTC", { cache:"no-store" })
+              .then(function(r){ return r.json(); })
+              .then(function(j){ return new Date(j.dateTime + "Z").getTime(); });
+          });
+      }
+    },
+    {
+      id: "timeapi", label: "TimeAPI.io",
+      fetcher: function(){
+        return fetch("https://timeapi.io/api/Time/current/zone?timeZone=Etc/UTC", { cache:"no-store" })
+          .then(function(r){ return r.json(); })
+          .then(function(j){ return new Date(j.dateTime + "Z").getTime(); })
+          .catch(function(){
+            return fetch("https://worldtimeapi.org/api/timezone/Etc/UTC", { cache:"no-store" })
+              .then(function(r){ return r.json(); })
+              .then(function(j){ return j.unixtime * 1000; });
+          });
+      }
+    }
+  ];
+
+  /* ============ Small helpers ============ */
+  function $(id){ return document.getElementById(id); }
+  function pad(n, w){ n = String(n); while(n.length < w) n = "0" + n; return n; }
+  function median(arr){
+    var s = arr.slice().sort(function(a,b){ return a - b; });
+    var mid = Math.floor(s.length / 2);
+    return s.length % 2 ? s[mid] : (s[mid-1] + s[mid]) / 2;
+  }
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ============ Theme ============ */
+  var themeColorMeta = document.querySelector('meta[name="theme-color"]');
+  var themeBtns = document.querySelectorAll("[data-theme-btn]");
+  function setTheme(name){
+    document.documentElement.setAttribute("data-theme", name);
+    themeBtns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.themeBtn === name)); });
+    if(themeColorMeta && THEME_BG[name]) themeColorMeta.setAttribute("content", THEME_BG[name]);
+  }
+  themeBtns.forEach(function(b){ b.addEventListener("click", function(){ setTheme(b.dataset.themeBtn); }); });
+
+  /* ============ Timezone display ============ */
+  var showLocal = false;
+  var clockTitle = $("clockTitle");
+  document.querySelectorAll("[data-tz-btn]").forEach(function(b){
+    b.addEventListener("click", function(){
+      showLocal = b.dataset.tzBtn === "local";
+      document.querySelectorAll("[data-tz-btn]").forEach(function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+      clockTitle.textContent = showLocal ? "Synchronized Local Time" : "Synchronized UTC";
+    });
+  });
+
+  /* ============ Digital / analog view ============ */
+  document.querySelectorAll("[data-view-btn]").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.documentElement.setAttribute("data-view", b.dataset.viewBtn);
+      document.querySelectorAll("[data-view-btn]").forEach(function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+    });
+  });
+
+  /* ============ Analog face ticks + hands ============ */
+  var ticksGroup = document.querySelector(".analog .ticks");
+  for(var t = 0; t < 12; t++){
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("class", "tick");
+    line.setAttribute("x1", "100"); line.setAttribute("y1", "10");
+    line.setAttribute("x2", "100"); line.setAttribute("y2", "20");
+    line.setAttribute("transform", "rotate(" + (t * 30) + " 100 100)");
+    ticksGroup.appendChild(line);
+  }
+  var hourHand = $("hourHand"), minuteHand = $("minuteHand"), secondHand = $("secondHand");
+
+  /* ============ Sync engine ============ */
+  var sourcesEl = $("sources");
+  var rows = {}, history = {}, retryDelay = {}, latest = {}, inFlight = {};
+  var syncLog = [];
+
+  SOURCES.forEach(function(s){
+    history[s.id] = [];
+    retryDelay[s.id] = 5000;
+    var row = document.createElement("div");
+    row.className = "source";
+    row.innerHTML =
+      '<div class="name">' + s.label + '</div>' +
+      '<div class="detail"><div class="status">Checking…</div></div>' +
+      '<svg class="spark" viewBox="0 0 70 24" preserveAspectRatio="none"><polyline points=""/></svg>' +
+      '<div class="offset">—</div>';
+    sourcesEl.appendChild(row);
+    rows[s.id] = row;
+  });
+
+  var masterDot = $("masterDot"), masterStatus = $("masterStatus"), deviceOffsetEl = $("deviceOffset");
+  var resyncBtn = $("resyncBtn"), offlineBanner = $("offlineBanner"), driftBanner = $("driftBanner");
+  var anchorPerf = null, anchorWall = null;
+
+  function queryOne(source){
+    if(inFlight[source.id]) return Promise.resolve({ ok:false, skip:true });
+    inFlight[source.id] = true;
+    var sendPerf = performance.now();
+    return source.fetcher().then(function(serverMs){
+      var rtt = performance.now() - sendPerf;
+      return { ok:true, offset: serverMs + rtt / 2 - Date.now(), rtt: rtt };
+    }).catch(function(err){
+      return { ok:false, error: err };
+    }).finally(function(){
+      inFlight[source.id] = false;
+    });
+  }
+
+  function drawSpark(id){
+    var svg = rows[id].querySelector(".spark");
+    var poly = svg.querySelector("polyline");
+    var hist = history[id];
+    if(hist.length < 2){ poly.setAttribute("points", ""); return; }
+    var max = Math.max.apply(null, hist.map(function(v){ return Math.abs(v); })) || 1;
+    var stepX = 70 / (HISTORY_LEN - 1);
+    var pts = hist.map(function(v, i){
+      return (i * stepX).toFixed(1) + "," + (12 - (v / max) * 10).toFixed(1);
+    }).join(" ");
+    poly.setAttribute("points", pts);
+    svg.classList.toggle("bad-line", Math.abs(hist[hist.length - 1]) > 400);
+  }
+
+  function renderRow(source, result){
+    if(result.skip) return;
+    var row = rows[source.id];
+    var statusEl = row.querySelector(".status");
+    var offsetEl = row.querySelector(".offset");
+
+    syncLog.push({
+      time: new Date().toISOString(), source: source.label, ok: result.ok,
+      offsetMs: result.ok ? Math.round(result.offset) : "",
+      rttMs: result.ok ? Math.round(result.rtt) : ""
+    });
+
+    if(result.ok){
+      statusEl.textContent = "Synced · RTT " + Math.round(result.rtt) + " ms";
+      offsetEl.textContent = (result.offset >= 0 ? "+" : "") + Math.round(result.offset) + " ms";
+      var hist = history[source.id];
+      hist.push(result.offset);
+      if(hist.length > HISTORY_LEN) hist.shift();
+      latest[source.id] = { offset: result.offset, timestamp: Date.now() };
+      retryDelay[source.id] = 5000;
+    } else {
+      statusEl.textContent = "Unavailable — retrying…";
+      offsetEl.textContent = "—";
+      scheduleRetry(source);
+    }
+    drawSpark(source.id);
+  }
+
+  function scheduleRetry(source){
+    var delay = retryDelay[source.id];
+    retryDelay[source.id] = Math.min(delay * 2, 60000);
+    setTimeout(function(){
+      if(document.hidden || !navigator.onLine) return;
+      queryOne(source).then(function(res){ renderRow(source, res); recomputeMaster(); });
+    }, delay);
+  }
+
+  function recomputeMaster(){
+    var now = Date.now();
+    var fresh = Object.keys(latest).map(function(id){ return latest[id]; })
+      .filter(function(v){ return (now - v.timestamp) < FRESH_MS; });
+
+    if(fresh.length === 0){
+      masterDot.className = "dot bad";
+      masterStatus.textContent = "All sources unreachable — showing device clock";
+      anchorPerf = performance.now();
+      anchorWall = Date.now();
+      deviceOffsetEl.textContent = "";
+      driftBanner.classList.remove("show");
+      return;
+    }
+
+    var offset = median(fresh.map(function(v){ return v.offset; }));
+    anchorPerf = performance.now();
+    anchorWall = Date.now() + offset;
+
+    masterDot.className = "dot ok";
+    masterStatus.textContent = fresh.length + " of " + SOURCES.length + " sources synced · median offset " +
+      (offset >= 0 ? "+" : "") + Math.round(offset) + " ms";
+
+    var absOff = Math.round(Math.abs(offset));
+    deviceOffsetEl.textContent = absOff < 15
+      ? "Your device clock is accurate to within " + absOff + " ms"
+      : "Your device clock is " + absOff + " ms " + (offset > 0 ? "slow" : "fast");
+
+    if(absOff >= DRIFT_MS){
+      driftBanner.textContent = "⚠ Drift alert: your device clock is off by " + absOff + " ms — consider syncing your system time.";
+      driftBanner.classList.add("show");
+    } else {
+      driftBanner.classList.remove("show");
+    }
+  }
+
+  function sync(){
+    if(!navigator.onLine) return;
+    resyncBtn.disabled = true;
+    masterDot.className = "dot warn";
+    masterStatus.textContent = "Contacting time servers…";
+
+    var jobs = SOURCES.map(function(s){
+      return queryOne(s).then(function(res){ renderRow(s, res); return res; });
+    });
+
+    Promise.all(jobs).then(function(){
+      resyncBtn.disabled = false;
+      recomputeMaster();
+    });
+  }
+  resyncBtn.addEventListener("click", sync);
+
+  /* ============ Copy synced timestamp ============ */
+  var copyBtn = $("copyBtn");
+  function fallbackCopy(text, done){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  copyBtn.addEventListener("click", function(){
+    var now = new Date(anchorWall + (performance.now() - anchorPerf));
+    var text = now.toISOString() + "  (epoch " + now.getTime() + ")";
+    var done = function(){
+      var old = copyBtn.textContent;
+      copyBtn.textContent = "Copied!";
+      setTimeout(function(){ copyBtn.textContent = old; }, 1500);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+
+  /* ============ Wall-clock fullscreen mode ============ */
+  var wallBtn = $("wallBtn"), exitWallBtn = $("exitWallBtn");
+  function setWallMode(on){
+    document.documentElement.setAttribute("data-wall", on ? "on" : "off");
+    var requestFs = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+    var exitFs = document.exitFullscreen || document.webkitExitFullscreen;
+    var fsElement = document.fullscreenElement || document.webkitFullscreenElement;
+    if(on && requestFs){
+      var r = requestFs.call(document.documentElement);
+      if(r && r.catch) r.catch(function(){});
+    } else if(!on && fsElement && exitFs){
+      var e = exitFs.call(document);
+      if(e && e.catch) e.catch(function(){});
+    }
+  }
+  wallBtn.addEventListener("click", function(){ setWallMode(true); });
+  exitWallBtn.addEventListener("click", function(){ setWallMode(false); });
+  ["fullscreenchange", "webkitfullscreenchange"].forEach(function(evt){
+    document.addEventListener(evt, function(){
+      if(!(document.fullscreenElement || document.webkitFullscreenElement)) setWallMode(false);
+    });
+  });
+
+  /* ============ Export sync log ============ */
+  $("exportBtn").addEventListener("click", function(){
+    var header = "time,source,ok,offset_ms,rtt_ms\n";
+    var body = syncLog.map(function(e){ return [e.time, e.source, e.ok, e.offsetMs, e.rttMs].join(","); }).join("\n");
+    var blob = new Blob([header + body], { type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "samay-sync-log.csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  /* ============ Online / offline resilience ============ */
+  window.addEventListener("offline", function(){
+    offlineBanner.classList.add("show");
+    masterDot.className = "dot bad";
+    masterStatus.textContent = "Offline — waiting for a connection";
+  });
+  window.addEventListener("online", function(){
+    offlineBanner.classList.remove("show");
+    sync();
+  });
+
+  /* ============ Auto re-sync while visible ============ */
+  var autoTimer = null;
+  function startAutoSync(){ stopAutoSync(); autoTimer = setInterval(function(){ if(!document.hidden) sync(); }, AUTO_SYNC_MS); }
+  function stopAutoSync(){ if(autoTimer){ clearInterval(autoTimer); autoTimer = null; } }
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden){ stopAutoSync(); } else { sync(); startAutoSync(); }
+  });
+
+  /* ============ Clock render loop ============ */
+  var clockEl = $("clock"), dateEl = $("dateStr");
+  function tick(){
+    if(anchorPerf !== null){
+      var now = new Date(anchorWall + (performance.now() - anchorPerf));
+      var h, m, s, ms;
+      if(showLocal){
+        h = pad(now.getHours(), 2); m = pad(now.getMinutes(), 2);
+        s = pad(now.getSeconds(), 2); ms = pad(now.getMilliseconds(), 3);
+      } else {
+        h = pad(now.getUTCHours(), 2); m = pad(now.getUTCMinutes(), 2);
+        s = pad(now.getUTCSeconds(), 2); ms = pad(now.getUTCMilliseconds(), 3);
+      }
+      clockEl.innerHTML = h + ":" + m + ":" + s + '<span class="ms">.' + ms + "</span>";
+      dateEl.textContent = now.toLocaleDateString(undefined, {
+        weekday:"long", year:"numeric", month:"long", day:"numeric",
+        timeZone: showLocal ? undefined : "UTC"
+      }) + (showLocal ? "" : " UTC");
+
+      var hNum = Number(h), mNum = Number(m), sNum = Number(s), msNum = Number(ms);
+      secondHand.setAttribute("transform", "rotate(" + ((sNum + msNum/1000)/60*360) + " 100 100)");
+      minuteHand.setAttribute("transform", "rotate(" + ((mNum + sNum/60)/60*360) + " 100 100)");
+      hourHand.setAttribute("transform", "rotate(" + (((hNum % 12) + mNum/60)/12*360) + " 100 100)");
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  sync();
+  startAutoSync();
+
+  /* ============ PWA install ============ */
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("service-worker.js").catch(function(){});
+    });
+    var swRefreshed = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function(){
+      if(swRefreshed) return;
+      swRefreshed = true;
+      window.location.reload();
+    });
+  }
+})();
+</script>
+</body>
+</html>
