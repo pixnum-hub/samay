@@ -1,0 +1,208 @@
+# PROPRIETARY SOFTWARE LICENSE
+
+## © 2026 Manik Roy. All Rights Reserved.
+
+**Version 1.0 — Effective August 17, 2026**
+
+This Proprietary Software License ("License") governs the use of the software, source code, object code, application, Progressive Web Application (PWA), documentation, designs, graphics, icons, content, algorithms, databases, configuration files, and related materials identified as proprietary and owned or controlled by **Manik Roy** ("Software").
+
+By accessing, viewing, downloading, installing, executing, copying, modifying, distributing, publishing, or otherwise using the Software, you acknowledge and agree to the terms of this License.
+
+## 1. Copyright Ownership
+
+The Software and its original components are protected by applicable copyright and intellectual-property laws.
+
+Unless expressly identified otherwise, all rights, title, and interest in the original Software are reserved by:
+
+**Manik Roy**
+
+Copyright © 2026 Manik Roy. All Rights Reserved.
+
+Nothing in this License transfers ownership of the Software to any other person or organization.
+
+## 2. No Open-Source License
+
+The Software is **not open-source software**.
+
+No permission is granted under the MIT License, Apache License, GNU General Public License, BSD License, Creative Commons license, or any other open-source license unless a particular component is expressly identified as being distributed under that license.
+
+The publication of the Software or its source code on GitHub does not, by itself, grant a general license to use, reproduce, modify, distribute, or commercialize the Software.
+
+## 3. Limited Viewing Permission
+
+If the Software is made available through a public repository, visitors may view the publicly accessible source code through the applicable platform.
+
+Such viewing permission does not constitute permission to:
+
+* copy the Software;
+* reproduce the Software;
+* modify the Software;
+* create derivative works;
+* redistribute the Software;
+* republish the source code;
+* incorporate the Software into another product;
+* sell the Software;
+* sublicense the Software;
+* commercially exploit the Software; or
+* create a competing product substantially based on the Software.
+
+## 4. Prohibited Uses
+
+Without prior written permission from Manik Roy, you may not:
+
+1. copy or reproduce the Software or substantial portions of it;
+2. modify, adapt, translate, or create derivative works from the Software;
+3. redistribute or republish the Software;
+4. upload copies or modified versions to another repository;
+5. fork, mirror, clone, or otherwise redistribute the Software for reuse;
+6. sell, rent, lease, sublicense, or otherwise commercially exploit the Software;
+7. incorporate substantial portions of the Software into another application;
+8. use the Software to create a substantially similar competing application;
+9. remove copyright, ownership, attribution, or proprietary notices;
+10. falsely represent yourself as the author or owner of the Software;
+11. use the Software as a component of a commercial product without written authorization;
+12. distribute modified versions of the Software;
+13. use substantial portions of the source code to train, fine-tune, or create a competing software-development or AI system where such use would infringe the owner's rights; or
+14. otherwise exploit the Software beyond the permissions expressly granted by this License.
+
+## 5. No Transfer of Ownership
+
+Downloading, viewing, installing, or receiving a copy of the Software does not transfer ownership.
+
+You receive no ownership interest, copyright interest, trademark interest, patent interest, or other intellectual-property interest in the Software.
+
+## 6. Commercial Use
+
+Commercial use is prohibited unless expressly authorized in writing by Manik Roy.
+
+Commercial use includes, without limitation:
+
+* selling the Software;
+* selling an application substantially based on the Software;
+* incorporating substantial portions into a commercial application;
+* offering the Software as a paid service;
+* offering the Software as SaaS;
+* using the Software to provide paid services;
+* sublicensing or licensing the Software to customers;
+* monetizing a substantially derived version; or
+* using substantial portions of the Software in a commercial product.
+
+Commercial authorization may be granted through a separate written commercial license or agreement.
+
+## 7. Personal and Educational Use
+
+Unless otherwise stated for a particular project, Manik Roy may permit limited personal or educational evaluation of the Software.
+
+Such permission does not authorize redistribution, commercial use, publication of copies, creation of competing products, or incorporation of substantial portions of the Software into another product.
+
+Where a particular project requires stricter restrictions, its repository README or separate license agreement may override this provision.
+
+## 8. Modifications and Derivative Works
+
+No permission is granted to create, publish, distribute, sell, or commercially exploit derivative works based on the Software.
+
+Any unauthorized modification or derivative work remains unauthorized even if substantial portions of the original Software have been changed.
+
+## 9. Third-Party Components
+
+The Software may contain, reference, communicate with, or depend upon third-party libraries, APIs, frameworks, fonts, datasets, services, or other materials.
+
+Third-party components remain subject to their own applicable licenses and terms.
+
+Nothing in this License attempts to relicense third-party materials that Manik Roy does not own.
+
+Where a third-party component is distributed under an open-source license, that component's applicable license continues to apply.
+
+## 10. External APIs and Services
+
+The Software may interact with external APIs, cloud services, data providers, maps, weather services, payment providers, artificial-intelligence services, analytics services, or other third-party services.
+
+Use of such services may be subject to separate terms, licenses, usage restrictions, and fees imposed by their respective providers.
+
+This License does not grant permission to use any third-party service beyond the permissions provided by that service's own terms.
+
+## 11. Trademarks and Branding
+
+Product names, application names, logos, icons, visual identities, branding, slogans, domain names, and other distinctive identifiers associated with the Software may constitute trademarks or other protected intellectual property.
+
+No trademark or branding license is granted by this License.
+
+You may not represent an unauthorized derivative product as an official product of Manik Roy.
+
+## 12. AI and Automated Systems
+
+Except where permitted by applicable law or a separate written agreement, no license is granted to systematically reproduce, extract, scrape, mirror, or repurpose substantial portions of the Software for the purpose of creating a competing software product, codebase, dataset, or automated system.
+
+Nothing in this section is intended to restrict rights that cannot legally be restricted under applicable law.
+
+## 13. Security Research and Legal Exceptions
+
+Nothing in this License is intended to prohibit activities that cannot legally be prohibited under applicable law.
+
+Any security research, interoperability activity, archival activity, accessibility activity, or other legally protected activity remains subject to applicable law.
+
+## 14. No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
+
+MANIK ROY DISCLAIMS WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY, RELIABILITY, AVAILABILITY, AND PERFORMANCE, EXCEPT WHERE SUCH DISCLAIMERS ARE PROHIBITED BY LAW.
+
+## 15. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, MANIK ROY SHALL NOT BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES ARISING FROM OR RELATING TO THE USE OR INABILITY TO USE THE SOFTWARE.
+
+## 16. Termination
+
+Any permission granted under this License automatically terminates if you materially violate its terms.
+
+Upon termination, you must cease all use of the Software and, where legally required, cease distribution and remove unauthorized copies under your control.
+
+Termination does not eliminate rights or remedies that accrued before termination.
+
+## 17. Reservation of Rights
+
+All rights not expressly granted by this License are reserved by Manik Roy.
+
+No implied license is granted.
+
+No waiver of any right shall be effective unless made in writing by the rights holder.
+
+## 18. Separate Commercial License
+
+Manik Roy may grant commercial, distribution, modification, OEM, SaaS, enterprise, reseller, or other licenses under separate written agreements.
+
+A separate signed agreement may provide permissions that are broader or different from those provided by this License.
+
+## 19. Contributions
+
+Unless a separate written contributor agreement exists, contributions from third parties must not be assumed to become exclusively owned by Manik Roy.
+
+Contributors should obtain appropriate written agreements before contributing substantial original code to a commercially important project.
+
+## 20. Governing Law
+
+This License shall be interpreted and enforced according to applicable law and the jurisdiction specified in any applicable commercial agreement.
+
+Where no separate agreement specifies jurisdiction, the applicable jurisdiction shall be determined according to the governing-law rules applicable to the rights holder and the relevant dispute.
+
+## 21. Copyright Notice
+
+The following notice may be included in source files, documentation, and application interfaces:
+
+**Copyright © 2026 Manik Roy. All Rights Reserved.**
+
+## 22. Contact for Permission
+
+Requests for permission to copy, modify, distribute, commercialize, sublicense, or otherwise use the Software beyond this License should be made directly to the copyright owner.
+
+Written permission should be obtained before undertaking any activity requiring a license.
+
+## 23. Acceptance
+
+By using the Software in any manner beyond merely viewing publicly accessible repository content, you acknowledge that you have read and understood this License and agree to comply with its applicable terms.
+
+---
+
+**Copyright © 2026 Manik Roy. All Rights Reserved.**
+
+**PROPRIETARY SOFTWARE — UNAUTHORIZED USE, COPYING, MODIFICATION, OR DISTRIBUTION PROHIBITED.**
